@@ -1,11 +1,13 @@
 import db from "../database/connection";
+import { logger } from "../helpers/log";
 import { serializeNotaVenda } from '../helpers/serializer';
 import { NotaVendaResponseType, NotaVendaType } from '../types/venda';
 
 export const getNotasVenda = async (): Promise<NotaVendaResponseType[]> => {
   try {
+    logger("Buscando Notas de Venda");
     const response = await db.query<NotaVendaType>(SQL_VENDA);
-    if (response.rowCount ==  0) {
+    if (response.rowCount == 0) {
       throw Error("Nenhuma Nota de Venda encontrada.");
     }
     const serializedData = serializeNotaVenda(response.rows);
@@ -103,7 +105,9 @@ from rst.nota n
      left join glb.veiculo plc on plc.idveiculo = fn.idveiculo
      left join gazin.frete_transportadora_cgc_agrupador trsp on trsp.idagrupador = fn.idtransportadora
      left join rst.pedidovendaauxiliar px on px.idpedidovenda = pv.idpedidovenda and px.idfilial = pv.idfilial
-where fn.idromaneio is not null and
+     left join gazin.confirma_facil_integracao cf on cf.idromaneio = fn.idromaneio and cf.numeronota = n.numeronota
+where (cf.status is null or cf.status = 2) and -- cf.status 2 - PENDENTE
+      fn.idromaneio is not null and
       n.idfilial in (10001, 10222, 10294, 10265, 10269, 10307, 10146, 10251, 140001, 10176, 10121, 10283, 10282, 10067, 10115) and
       (trns.nome not ilike '%cliente retira%' and trns.nome not ilike '%correios%') and
       (trsp.descricao not ilike '%cliente retira%' and trsp.descricao not ilike '%correios%') and

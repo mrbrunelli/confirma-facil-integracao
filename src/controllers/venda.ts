@@ -23,7 +23,7 @@ export const vendaController = async () => {
     }
     logger("Notas de Venda Enviadas.")
   } catch (e) {
-    throw Error(e.message);
+    logger(e.message);
   }
 }
 

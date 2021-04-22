@@ -68,6 +68,7 @@ export const insertOrUpdateStatus = async (nota: number, romaneio: number, statu
         INSERT INTO gazin.confirma_facil_integracao (numeronota, idromaneio, status)
         VALUES (${nota}, ${romaneio}, ${status})
       `);
+      return "Nota Inserida com Sucesso!";
     } else {
       await db.query(`
         UPDATE gazin.confirma_facil_integracao
@@ -75,6 +76,7 @@ export const insertOrUpdateStatus = async (nota: number, romaneio: number, statu
         WHERE numeronota = ${nota}
         AND idromaneio = ${romaneio}
       `);
+      return "Nota Atualizada com Sucesso!";
     }
   } catch (e) {
     throw Error(e.message);

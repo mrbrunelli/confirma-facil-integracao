@@ -1,3 +1,4 @@
+import { NotaCanceladaResponseType, NotaCanceladaType } from "../types/cancelada";
 import { NotaTransferenciaResponseType, NotaTransferenciaType } from "../types/transferencia";
 import { NotaVendaResponseType, NotaVendaType } from "../types/venda";
 
@@ -68,5 +69,17 @@ export const serializeNotaTransferencia = (notas: NotaTransferenciaType[]): Nota
       'motorista: ' + n.motorista_nome,
       'tipo pedido: ' + n.tipopedido
     ]
+  }))
+}
+
+export const serializeNotaCancelada = (notas: NotaCanceladaType[]): NotaCanceladaResponseType[] => {
+  return notas.map(n => ({
+    embarque: {
+      numero: n.numeronota.toString(),
+      serie: n.serie
+    },
+    embarcador: {
+      cnpj: n.embarcador
+    }
   }))
 }
